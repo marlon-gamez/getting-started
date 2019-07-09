@@ -1,0 +1,88 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata: 
+  name: source-git
+spec:
+  type: git
+  params:
+    - name: url
+      value: https://github.com/marlon-gamez/getting-started
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: skaffold-build
+spec:
+  inputs:
+    resources:
+      - name: source
+        type: git
+  steps:
+    - name: run-build
+      image: gcr.io/k8s-skaffold/skaffold:v0.32.0
+      command: ["skaffold", "build"]
+      args: 
+        - --filename=/workspace/source/pipeline/skaffold.yaml
+      # volumeMounts:
+      #   - name: "pipeline-skaffold-config"
+      #     mountPath: /pipeline-files/
+      env:
+        - name: "FOO"
+          value: "foo"
+
+  # volumes:
+  #   - name: "pipeline-skaffold-config"
+  #     configMap:
+  #       name: "pipeline-skaffold-yaml"
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: skaffold-deploy
+spec:
+  inputs:
+    resources:
+      - name: source
+        type: git
+  steps:
+    - name: run-deploy
+      image: gcr.io/k8s-skaffold/skaffold:v0.32.0
+      command: ["skaffold", "deploy"]
+      args:
+        - --filename=/workspace/source/pipeline/skaffold.yaml
+      # volumeMounts:
+      #   - name: "pipeline-skaffold-config"
+      #     mountPath: /pipeline-files/
+      #   - name: "pipeline-deploy-config"
+      #     mountPath: /pipeline-files/
+  # volumes:
+  #   - name: "pipeline-skaffold-config"
+  #     configMap:
+  #       name: "pipeline-skaffold-yaml"
+  #   - name: "pipeline-deploy-config"
+  #     configMap:
+  #       name: "pipeline-deploy-manifest"
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata: 
+  name: skaffold-pipeline
+spec:
+  resources:
+    - name: source-repo
+      type: git 
+  tasks:
+    - name: skaffold-build-task
+      taskRef:
+        name: skaffold-build
+      resources:
+        inputs:
+          - name: source
+            resource: source-repo
+    - name: skaffold-deploy-task
+      taskRef:
+        name: skaffold-deploy
+      resources:
+        inputs:
+          - name: source
+            resource: source-repo
