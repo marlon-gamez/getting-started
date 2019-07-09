@@ -5,11 +5,13 @@ build:
     envTemplate:
       template: "{{.IMAGE_NAME}}:{{.FOO}}"
   artifacts:
-  - image: gcr.io/first-week-244218/getting-started-CICD
-    kaniko:
-      buildContext:
-        gcsBucket: skaffold-kaniko
-      cache: {}
+    - image: gcr.io/first-week-244218/getting-started-CICD
+      kaniko:
+        buildContext:
+          gcsBucket: skaffold-kaniko
+        cache: {}
+  cluster:
+    pullSecretName: kaniko-secret
 deploy:
   kubectl:
     manifests:
