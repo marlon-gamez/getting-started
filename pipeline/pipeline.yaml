@@ -19,21 +19,16 @@ spec:
         type: git
   steps:
     - name: run-build
-      image: gcr.io/k8s-skaffold/skaffold:v0.32.0
+      image: gcr.io/k8s-skaffold/skaffold:v0.33.0
       command: ["skaffold", "build"]
-      args: 
-        - --filename=/workspace/source/pipeline/skaffold.yaml
-      # volumeMounts:
-      #   - name: "pipeline-skaffold-config"
-      #     mountPath: /pipeline-files/
-      env:
-        - name: "FOO"
-          value: "foo"
-
-  # volumes:
-  #   - name: "pipeline-skaffold-config"
-  #     configMap:
-  #       name: "pipeline-skaffold-yaml"
+      args: ["--filename", "/workspace/source/pipeline/skaffold.yaml"]
+      volumeMounts:
+        - name: "kaniko-secret"
+          mountPath: /kaniko-secret/
+  volumes:
+    - name: "kaniko-secret"
+      configMap:
+        name: "kaniko-secret-configmap"
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
@@ -46,22 +41,9 @@ spec:
         type: git
   steps:
     - name: run-deploy
-      image: gcr.io/k8s-skaffold/skaffold:v0.32.0
+      image: gcr.io/k8s-skaffold/skaffold:v0.33.0
       command: ["skaffold", "deploy"]
-      args:
-        - --filename=/workspace/source/pipeline/skaffold.yaml
-      # volumeMounts:
-      #   - name: "pipeline-skaffold-config"
-      #     mountPath: /pipeline-files/
-      #   - name: "pipeline-deploy-config"
-      #     mountPath: /pipeline-files/
-  # volumes:
-  #   - name: "pipeline-skaffold-config"
-  #     configMap:
-  #       name: "pipeline-skaffold-yaml"
-  #   - name: "pipeline-deploy-config"
-  #     configMap:
-  #       name: "pipeline-deploy-manifest"
+      args: ["--filename", "/workspace/source/pipeline/skaffold.yaml"]
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
