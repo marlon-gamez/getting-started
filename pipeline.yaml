@@ -25,12 +25,13 @@ spec:
       type: git
   steps:
   - args:
+    - build
     - --filename
     - /workspace/source/skaffold.yaml
     - --profile
     - oncluster
     command:
-    - skaffold build
+    - skaffold
     image: gcr.io/k8s-skaffold/skaffold:v0.33.0
     name: run-build
     resources: {}
@@ -49,12 +50,13 @@ spec:
       type: git
   steps:
   - args:
+    - deploy
     - --filename
     - /workspace/source/skaffold.yaml
     - --profile
     - oncluster
     command:
-    - skaffold deploy
+    - skaffold
     image: gcr.io/k8s-skaffold/skaffold:v0.33.0
     name: run-deploy
     resources: {}
