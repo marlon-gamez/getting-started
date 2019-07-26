@@ -15,7 +15,8 @@ profiles:
       context: .
       kaniko:
         buildContext:
-          gcsBucket: marlon-testing-bucket
+          # gcsBucket: marlon-testing-bucket
+          localDir: {}
     tagPolicy:
       gitCommit: {}
     cluster:
