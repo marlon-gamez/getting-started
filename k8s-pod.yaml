@@ -5,4 +5,4 @@ metadata:
 spec:
   containers:
   - name: getting-started
-    image: gcr.io/first-week-244218/getting-started-CICD
+    image: gcr.io/first-week-244218/getting-started-pipeline
