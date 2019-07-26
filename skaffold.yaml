@@ -20,5 +20,5 @@ profiles:
     tagPolicy:
       gitCommit: {}
     cluster:
-      pullSecretName: kaniko-secret
+      pullSecretName: kaniko-secret.json
 - name: testing
