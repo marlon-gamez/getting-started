@@ -15,10 +15,10 @@ profiles:
       context: .
       kaniko:
         buildContext:
-          # gcsBucket: marlon-testing-bucket
-          localDir: {}
+          gcsBucket: marlon-testing-bucket
+          # localDir: {}
     tagPolicy:
       gitCommit: {}
     cluster:
-      pullSecretName: kaniko-secret.json
+      pullSecretName: kaniko-secret
 - name: testing
