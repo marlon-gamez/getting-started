@@ -27,14 +27,17 @@ spec:
   - args:
     - build
     - --filename
-    - /workspace/source/skaffold.yaml
+    - skaffold.yaml
     - --profile
     - oncluster
+    - --file-output
+    - build.out
     command:
     - skaffold
     image: gcr.io/k8s-skaffold/skaffold:v0.33.0
     name: run-build
     resources: {}
+    workingDir: /workspace/source
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
@@ -52,14 +55,17 @@ spec:
   - args:
     - deploy
     - --filename
-    - /workspace/source/skaffold.yaml
+    - skaffold.yaml
     - --profile
     - oncluster
+    - --build-artifacts
+    - build.out
     command:
     - skaffold
     image: gcr.io/k8s-skaffold/skaffold:v0.33.0
     name: run-deploy
     resources: {}
+    workingDir: /workspace/source
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline

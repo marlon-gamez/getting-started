@@ -14,7 +14,6 @@ profiles:
     - image: gcr.io/first-week-244218/getting-started-pipeline
       context: .
       kaniko:
-        dockerfile: /workspace/source/Dockerfile
         buildContext:
           gcsBucket: skaffold-kaniko
     tagPolicy:
