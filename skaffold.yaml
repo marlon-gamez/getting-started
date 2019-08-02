@@ -6,7 +6,7 @@ build:
 deploy:
   kubectl:
     manifests:
-      - k8s-*
+    - k8s-*
 profiles:
 - name: oncluster
   build:
@@ -16,9 +16,7 @@ profiles:
       kaniko:
         buildContext:
           gcsBucket: marlon-testing-bucket
-          # localDir: {}
     tagPolicy:
       gitCommit: {}
     cluster:
       pullSecretName: kaniko-secret
-- name: testing

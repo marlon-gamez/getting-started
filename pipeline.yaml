@@ -34,7 +34,7 @@ spec:
     - build.out
     command:
     - skaffold
-    image: gcr.io/k8s-skaffold/skaffold:v0.34.0
+    image: gcr.io/k8s-skaffold/skaffold:v0.35.0
     name: run-build
     resources: {}
     workingDir: /workspace/source
@@ -56,13 +56,11 @@ spec:
     - deploy
     - --filename
     - skaffold.yaml
-    - --profile
-    - oncluster
     - --build-artifacts
     - build.out
     command:
     - skaffold
-    image: gcr.io/k8s-skaffold/skaffold:v0.34.0
+    image: gcr.io/k8s-skaffold/skaffold:v0.35.0
     name: run-deploy
     resources: {}
     workingDir: /workspace/source
