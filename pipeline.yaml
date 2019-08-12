@@ -23,6 +23,12 @@ spec:
       outputImageDir: ""
       targetPath: ""
       type: git
+  outputs:
+    resources:
+    - name: source
+      outputImageDir: ""
+      targetPath: ""
+      type: git
   steps:
   - args:
     - build
@@ -34,10 +40,20 @@ spec:
     - build.out
     command:
     - skaffold
+    env:
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: /secret/kaniko-secret
     image: gcr.io/k8s-skaffold/skaffold:v0.35.0
     name: run-build
     resources: {}
+    volumeMounts:
+    - mountPath: /secret
+      name: kaniko-secret
     workingDir: /workspace/source
+  volumes:
+  - name: kaniko-secret
+    secret:
+      secretName: kaniko-secret
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
@@ -80,15 +96,18 @@ spec:
       inputs:
       - name: source
         resource: source-repo
+      outputs:
+      - name: source
+        resource: source-repo
     taskRef:
       name: skaffold-build
   - name: skaffold-deploy-task
     resources:
       inputs:
-      - name: source
+      - from:
+        - skaffold-build-task
+        name: source
         resource: source-repo
-    runAfter:
-    - skaffold-build-task
     taskRef:
       name: skaffold-deploy
 status: {}
