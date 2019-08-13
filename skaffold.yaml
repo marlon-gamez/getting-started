@@ -15,7 +15,7 @@ profiles:
       context: .
       kaniko:
         buildContext:
-          gcsBucket: skaffold-kaniko
+          gcsBucket: marlon-testing-bucket
     tagPolicy:
       gitCommit: {}
     cluster:
