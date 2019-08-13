@@ -7,16 +7,3 @@ deploy:
   kubectl:
     manifests:
     - k8s-*
-profiles:
-- name: oncluster
-  build:
-    artifacts:
-    - image: gcr.io/first-week-244218/getting-started-pipeline
-      context: .
-      kaniko:
-        buildContext:
-          gcsBucket: marlon-testing-bucket
-    tagPolicy:
-      gitCommit: {}
-    cluster:
-      pullSecretName: kaniko-secret
